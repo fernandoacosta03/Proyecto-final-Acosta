@@ -1,61 +1,122 @@
-alert("Su limite de compra son $60000 pesos");
 
-function comprarProducto() {
-  
-  let nombreProducto = prompt("¿Que producto quieres comprar?");
-  let precio = prompt("¿Cuanto cuesta " + nombreProducto + "?");
 
-  
-  if (isNaN(precio) || precio <= 0) {
-      alert("El precio ingresado no es valido. Intantalo de nuevo");
-      return comprarProducto(); 
-  }
+class Jugador {
+    constructor(nombre, dinero) {
+        this.nombre = nombre;
+        this.dinero = dinero;
+        this.apuestasRealizadas = []; 
+    }
 
-  alert("Has añadido " + nombreProducto + " al carrito por $" + precio);
-  return Number(precio); 
+    
+    registrarApuesta(juego, monto, resultado) {
+        this.apuestasRealizadas.push({ juego, monto, resultado });
+    }
+
+   
+    obtenerUltimaApuesta() {
+        return this.apuestasRealizadas.pop(); 
+    }
 }
 
-let continuarComprando = true; 
 
-while (continuarComprando) {
-  
-  let totalGasto = 0;
-  const limiteGasto = 60000; 
-  let cantidadProductos = prompt("¿Cuantos productos quieres comprar?");
-  cantidadProductos = parseInt(cantidadProductos);
+let nombreJugador = prompt("¿Cual es tu nombre?").toLowerCase();
+let jugador = new Jugador(nombreJugador, 60000); 
 
-  
-  if (isNaN(cantidadProductos) || cantidadProductos <= 0) {
-      alert("Debes ingresar un número valido de productos");
-  } else {
-     
-      for (let i = 0; i < cantidadProductos; i++) {
-          let precioProducto = comprarProducto(); 
 
-          totalGasto += precioProducto; 
+const generarNumeroAleatorio = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-          
-          if (totalGasto > limiteGasto) {
-              alert("Has excedido el limite de gasto de $" + limiteGasto + ". ¡Cuidado con tus compras!");
-              break; 
-          } else if (totalGasto === limiteGasto) {
-              alert("Has alcanzado el límite de gasto de $" + limiteGasto + ". No puedes gastar mas");
-              break;
-          } else {
-              alert("Llevas un total gastado de $" + totalGasto + ". Puedes seguir comprando");
-          }
-      }
 
-      
-      alert("El total de tu compra es: $" + totalGasto);
-  }
+const jugarRuleta = () => {
+    let apuesta = parseInt(prompt("¿Cuanto deseas apostar en la ruleta?"));
+    if (apuesta > jugador.dinero || isNaN(apuesta) || apuesta <= 0) {
+        alert("Error al apostar. Asegúrate de tener suficiente dinero y de ingresar un valor numerico positivo.");
+        return;
+    }
 
-  
-  let respuesta = prompt("¿Quieres hacer otra compra? (si/no)").toLowerCase();
+    let numeroElegido = parseInt(prompt("Elige un numero entre 0 y 36"));
+    if (isNaN(numeroElegido) || numeroElegido < 0 || numeroElegido > 36) {
+        alert("Error. Debes elegir un numero entre 0 y 36.");
+        return;
+    }
 
-  if (respuesta !== "si") {
-      continuarComprando = false;
-      alert("Gracias por comprar. ¡Hasta la proxima!");
-  }
+    let numeroGanador = generarNumeroAleatorio(0, 36);
+
+    if (numeroElegido === numeroGanador) {
+        let ganancia = apuesta * 2; 
+        jugador.dinero += ganancia;
+        jugador.registrarApuesta("Ruleta", apuesta, "Ganada");
+        alert(`¡Felicidades! El numero ganador fue ${numeroGanador}. Has ganado ${ganancia}.`);
+    } else {
+        jugador.dinero -= apuesta;
+        jugador.registrarApuesta("Ruleta", apuesta, "Perdida");
+        alert(`Lo siento, el numero ganador fue ${numeroGanador}. Pierdes ${apuesta}.`);
+    }
+};
+
+
+const jugarTragamonedas = () => {
+    let apuesta = parseInt(prompt("¿Cuanto deseas apostar en las tragamonedas?"));
+    if (apuesta > jugador.dinero || isNaN(apuesta) || apuesta <= 0) {
+        alert("Error al apostar. Asegurate de tener suficiente dinero y de ingresar un valor numérico positivo.");
+        return;
+    }
+
+    let resultado = [];
+    for (let i = 0; i < 3; i++) {
+        resultado.push(generarNumeroAleatorio(1, 5)); 
+    }
+
+    alert(`Resultados de las tragamonedas: ${resultado.join(' | ')}`);
+
+    if (resultado[0] === resultado[1] && resultado[1] === resultado[2]) {
+        let ganancia = apuesta * 2;
+        jugador.dinero += ganancia;
+        jugador.registrarApuesta("Tragamonedas", apuesta, "Ganada");
+        alert(`¡Felicidades! Has ganado ${ganancia}.`);
+    } else {
+        jugador.dinero -= apuesta;
+        jugador.registrarApuesta("Tragamonedas", apuesta, "Perdida");
+        alert(`Lo siento, pierdes ${apuesta}.`);
+    }
+};
+
+
+const mostrarSaldo = () => {
+    alert(`Tu saldo actual es: ${jugador.dinero}`);
+};
+
+
+const mostrarUltimaApuesta = () => {
+    const ultimaApuesta = jugador.obtenerUltimaApuesta();
+    if (ultimaApuesta) {
+        alert(`Tu ultima apuesta fue en el juego ${ultimaApuesta.juego}, apostaste ${ultimaApuesta.monto} y resulto ${ultimaApuesta.resultado}.`);
+    } else {
+        alert("Aun no has realizado ninguna apuesta.");
+    }
+};
+
+
+let continuar = true;
+while (continuar && jugador.dinero > 0) {
+    let opcion = prompt("Elige una opcion:\n1. Ruleta\n2. Traga monedas\n3. Ver saldo\n4. Ver última apuesta\n5. Salir");
+
+    if (opcion === "1") {
+        jugarRuleta();
+    } else if (opcion === "2") { 
+        jugarTragamonedas();
+    } else if (opcion === "3") {
+        mostrarSaldo();
+    } else if (opcion === "4") {
+        mostrarUltimaApuesta();
+    } else if (opcion === "5") {
+        continuar = false;
+    } else {
+        alert("Opcion invalida. Por favor, elige una opcion entre 1 y 5.");
+    }
 }
 
+if (jugador.dinero <= 0) {
+    alert("Te has quedado sin dinero. ¡Gracias por jugar!");
+} else {
+    alert(`¡Gracias por visitar el casino Acosta, Saludos ${jugador.nombre}!`);
+}
