@@ -1,0 +1,8 @@
+[
+    { "nombre": "Skate 1", "precio": 25000, "imagen": "https://i.pinimg.com/736x/28/10/f4/2810f4e67f88e8553608e0fd3a61e237.jpg" },
+    { "nombre": "Skate 2", "precio": 30000, "imagen": "https://i.pinimg.com/736x/0b/94/d8/0b94d8ebb395d9f0f5f1c83c48e444c2.jpg" },
+    { "nombre": "Skate 3", "precio": 27000, "imagen": "https://i.pinimg.com/564x/1f/98/27/1f9827d270de99eb265232db27e4dde6.jpg" },
+    { "nombre": "Remera Skate 1", "precio": 50000, "imagen": "https://i.pinimg.com/736x/4d/37/d3/4d37d33b7f0a72fcaf433f628a8595c3.jpg" },
+    { "nombre": "Remera Skate 2", "precio": 60000, "imagen": "https://i.pinimg.com/736x/0a/84/b5/0a84b5c1a270435e55c9646f790c2754.jpg" },
+    { "nombre": "Remera Skate 3", "precio": 55000, "imagen": "https://i.pinimg.com/564x/b4/c6/38/b4c6387dd74c5f98d3cb51f7cc327eea.jpg" }
+]
